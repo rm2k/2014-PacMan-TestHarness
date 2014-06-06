@@ -80,7 +80,7 @@ namespace PacManDuel
             foreach (var game in games)
             {
                 int p1 = 0, p2 = 0;
-                if (game.Players[0].GetPlayerName() != firstPlayer) p1 = 1;
+                if (game.PlayerMovedFirst.GetPlayerName() != firstPlayer) p1 = 1;
                 p2 = 1 - p1;
                 playerATotal += game.Players[p1].GetScore();
                 playerBTotal += game.Players[p2].GetScore();

@@ -81,6 +81,7 @@ namespace PacManDuel.Models
             return new GameResult()
             {
                 Players = _playerPool.GetPlayers(),
+                PlayerMovedFirst = _playerPool.GetPlayerMovedFirst(),
                 Outcome = gameOutcome,
                 Iterations = _iteration - 1,
                 Folder = folderPath
