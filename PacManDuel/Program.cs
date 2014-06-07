@@ -54,14 +54,26 @@ namespace PacManDuel
 
             var games = new List<GameResult>();
 
-            var playerA = new Player("botB", playerBPath, playerBBot, 'B');
-            var playerB = new Player("botA", playerAPath, playerABot, 'A');
+            var playerA = new Player("botA", playerAPath, playerABot, 'A');
+            var playerB = new Player("botB", playerBPath, playerBBot, 'B');
             var game = new Game(playerA, playerB, Properties.Settings.Default.SettingInitialMazeFilePath);
             var result = game.Run("Match_" + DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss"));
             games.Add(result);
 
             GameSummary(games);
             return 0;
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
         private static void GameSummary(List<GameResult> games)
@@ -82,11 +94,11 @@ namespace PacManDuel
                 int p1 = 0, p2 = 0;
                 if (game.PlayerMovedFirst.GetPlayerName() != firstPlayer) p1 = 1;
                 p2 = 1 - p1;
-                playerATotal += game.Players[p1].GetScore();
-                playerBTotal += game.Players[p2].GetScore();
+                playerATotal += game.Players[0].GetScore();
+                playerBTotal += game.Players[1].GetScore();
                 Console.WriteLine("{0,10}{1} {2,10}{3}  {4,4} {5:-15} {6}",
-                    game.Players[p1].GetScore(), p1 == 0 ? "*" : " ",
-                    game.Players[p2].GetScore(), p2 == 0 ? "*" : " ",
+                    game.Players[0].GetScore(), p1 == 0 ? "*" : " ",
+                    game.Players[1].GetScore(), p2 == 0 ? "*" : " ",
                     game.Iterations, game.Outcome.ToString(), game.Folder);
             }
             Console.WriteLine("==========  ==========");
