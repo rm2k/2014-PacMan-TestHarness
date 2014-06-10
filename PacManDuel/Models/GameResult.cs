@@ -6,7 +6,6 @@ namespace PacManDuel.Models
     class GameResult
     {
         public List<Player> Players { get; set; }
-        public Player PlayerMovedFirst { get; set; }
         public Enums.GameOutcome Outcome { get; set; }
         public int Iterations { get; set; }
         public string Folder { get; set; }

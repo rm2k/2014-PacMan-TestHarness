@@ -51,6 +51,7 @@ namespace PacManDuel.Models
                         var turnOutcome = GetTurnOutcome(mazeFromPlayer, currentPosition, previousPosition, opponentPosition, logFile);
                         if (turnOutcome != Enums.TurnOutcome.MoveMadeAndDroppedPoisonPillIllegally)
                         {
+                            opponentPosition = mazeFromPlayer.FindCoordinateOf(Symbols.SYMBOL_PLAYER_B);//Reaffirm: Maybe empty(different) if consecutive re-spawn.
                             RegenerateOpponentIfDead(opponentPosition, mazeFromPlayer);
                             gameOutcome = GetGameOutcome(mazeFromPlayer, logFile, gameOutcome, turnOutcome);
                             winner = DeterminIfWinner(gameOutcome, mazeFromPlayer, winner);
@@ -81,7 +82,6 @@ namespace PacManDuel.Models
             return new GameResult()
             {
                 Players = _playerPool.GetPlayers(),
-                PlayerMovedFirst = _playerPool.GetPlayerMovedFirst(),
                 Outcome = gameOutcome,
                 Iterations = _iteration - 1,
                 Folder = folderPath
@@ -149,7 +149,8 @@ namespace PacManDuel.Models
                 new StreamWriter(folderPath + System.IO.Path.DirectorySeparatorChar + Properties.Settings.Default.SettingReplayFolder + System.IO.Path.DirectorySeparatorChar + "iteration" +
                                  _iteration + Properties.Settings.Default.SettingStateFileExtension);
             var mazeForFile = new Maze(_maze);
-            if (_secondMazePlayer == _currentPlayer.GetSymbol())
+            if ((_secondMazePlayer == _currentPlayer.GetSymbol() && !mazeForFile.FindCoordinateOf(Symbols.SYMBOL_PLAYER_B).IsEmpty)
+                || (!(_secondMazePlayer == _currentPlayer.GetSymbol()) && mazeForFile.FindCoordinateOf(Symbols.SYMBOL_PLAYER_B).IsEmpty))
                 mazeForFile.SwapPlayerSymbols();
             replayFile.Write(mazeForFile.ToFlatFormatString());
             replayFile.Close();
