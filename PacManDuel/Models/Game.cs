@@ -62,10 +62,23 @@ namespace PacManDuel.Models
                     _maze.WriteMaze(gamePlayDirectoryPath + System.IO.Path.DirectorySeparatorChar + Properties.Settings.Default.SettingGamePlayFile);
                     Maze iterationFileMaze = CreateIterationStateFile(folderPath);
                     _iteration++;
-                    foreach (var player in _playerPool.GetPlayers())
+
+                    var _contestants = _playerPool.GetPlayers();
+                    if(_contestants[0].GetSymbol() != _secondMazePlayer)
                     {
-                        Console.Write(player.GetSymbol() + "," + player.GetPlayerName() + ": " + player.GetScore() + "  ");
+                        for(var i = 0; i < _contestants.Count; i++)
+                        {
+                            Console.Write(_contestants[(i + 1) % 2].GetSymbol() + "," + _contestants[(i + 1) % 2].GetPlayerName()
+                                + ": " + _contestants[(i + 1) % 2].GetScore() + "  ");
+                        }
                     }
+                    else
+                    {
+                        foreach (var player in _contestants)
+                        {
+                            Console.Write(player.GetSymbol() + "," + player.GetPlayerName() + ": " + player.GetScore() + "  ");
+                        }
+                    }                    
                     Console.WriteLine();
                     iterationFileMaze.Print();
                 }
