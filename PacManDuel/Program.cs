@@ -54,9 +54,8 @@ namespace PacManDuel
 
             var games = new List<GameResult>();
 
-            var playerA = new Player("botB", playerBPath, playerBBot, 'B');
-            var playerB = new Player("botA", playerAPath, playerABot, 'A');
-            var game = new Game(playerA, playerB, Properties.Settings.Default.SettingInitialMazeFilePath);
+            var contestants = GetContestants(args);
+            var game = new Game(contestants[0], contestants[1], Properties.Settings.Default.SettingInitialMazeFilePath);
             var result = game.Run("Match_" + DateTime.UtcNow.ToString("yyyy-MM-dd_hh-mm-ss"));
             games.Add(result);
 
@@ -70,18 +69,18 @@ namespace PacManDuel
             Console.WriteLine("Results:");
             Console.WriteLine("========");
             Console.WriteLine();
-            Console.WriteLine(games[0].Players[0].GetPlayerName() + " = " + games[0].Players[0].GetPlayerPath());
-            Console.WriteLine(games[0].Players[1].GetPlayerName() + " = " + games[0].Players[1].GetPlayerPath());
+            var firstPlayer = games[0].Players.First(player => player.GetSymbol() == 'A');
+            int p1 = 0, p2 = 0;
+            if (!games[0].Players[0].Equals(firstPlayer)) p1 = 1;
+            p2 = 1 - p1;
+            Console.WriteLine(games[0].Players[p1].GetPlayerName() + " = " + games[0].Players[p1].GetPlayerPath());
+            Console.WriteLine(games[0].Players[p2].GetPlayerName() + " = " + games[0].Players[p2].GetPlayerPath());
             Console.WriteLine();
             var playerATotal = 0;
             var playerBTotal = 0;
-            var firstPlayer = games[0].Players[0].GetPlayerName();
-            Console.WriteLine("{0,10}  {1,10}  Moves", games[0].Players[0].GetPlayerName(), games[0].Players[1].GetPlayerName());
+            Console.WriteLine("{0,10}  {1,10}  Moves", games[0].Players[p1].GetPlayerName(), games[0].Players[p2].GetPlayerName());
             foreach (var game in games)
             {
-                int p1 = 0, p2 = 0;
-                if (game.Players[0].GetPlayerName() != firstPlayer) p1 = 1;
-                p2 = 1 - p1;
                 playerATotal += game.Players[p1].GetScore();
                 playerBTotal += game.Players[p2].GetScore();
                 Console.WriteLine("{0,10}{1} {2,10}{3}  {4,4} {5:-15} {6}",
@@ -128,6 +127,30 @@ namespace PacManDuel
         static string GetExeName()
         {
             return Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName);
+        }
+
+        static List<Player> GetContestants(string[] args)
+        {
+            var r = new Random();
+            var _firstPlayerIndex = r.Next(0, 2);
+            if (_firstPlayerIndex > 0)
+            {
+                var contestants = new List<Player>
+                {
+                    new Player("BotB", args[2],args[3],'B'),
+                    new Player("BotA", args[0], args[1],'A')
+                };
+                return contestants;
+            }
+            else
+            {
+                var contestants = new List<Player>
+                {
+                    new Player("BotA", args[0],args[1],'A'),
+                    new Player("BotB", args[2], args[3],'B')
+                };
+                return contestants;
+            }
         }
     }
 }
